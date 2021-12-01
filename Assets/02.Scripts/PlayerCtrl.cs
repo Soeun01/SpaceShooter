@@ -6,7 +6,7 @@ public class PlayerCtrl : MonoBehaviour
 {
     //컴포넌트를 캐시 처리할 변수
     //SerializeField : 인스펙터 뷰에 노출하는 기능
-    [SerializeField]
+    //[SerializeField]
     private Transform tr;
     //Animation 컴포넌트르 저장할 변수
     private Animation anim;
@@ -17,7 +17,7 @@ public class PlayerCtrl : MonoBehaviour
     //회전 속도 변수
     public float turnSpeed = 80.0f;
     
-    void Start()
+    IEnumerator Start()
     {
         //컴포넌트를 추출해 변수에 대입
         tr = GetComponent<Transform>();
@@ -25,6 +25,10 @@ public class PlayerCtrl : MonoBehaviour
 
         //애니메이션 실행
         anim.Play("Idle");
+
+        turnSpeed = 0.0f;
+        yield return new WaitForSeconds(0.3f);
+        turnSpeed = 80.0f;
     }
 
     void Update()

@@ -79,7 +79,6 @@ public class BarrelCtrl : MonoBehaviour
         //주변에 있는 드럼통 모두 추출
         //가비지 컬랙션 발생
         //Collider[] colls = Physics.OverlapSphere(pos, radius, 1 << 3);
-
         //가비지 컬랙션 발생하지 않음.
         Physics.OverlapSphereNonAlloc(pos, radius, colls, 1 << 3);
 
