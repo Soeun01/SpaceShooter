@@ -50,37 +50,38 @@ public class BarrelCtrl : MonoBehaviour
         }
     }
     
+    // 드럼통을 폭발시킬 함수
     void ExpBarrel()
     {
-        //폭발효과 파티클 생성
+        // 폭발 효과 파티클 생성
         GameObject exp = Instantiate(expEffect, tr.position, Quaternion.identity);
-        //폭발효과 파티클 5초 후 제거
+        // 폭발 효과 파티클 5초 후에 제거
         Destroy(exp, 5.0f);
 
-        //Rigidbody 컴포넌트의 mass를 1.0으로 수정해 무게를 가볍게 함
-        //rb.mass = 1.0f;
-        //위로 솟구치는 힘을 가함
-        //rb.AddForce(Vector3.up * 1500.0f);
+        // Rigidbody 컴포넌트의 mass를 1.0으로 수정해 무게를 가볍게 함
+        // rb.mass = 1.0f;
+        // 위로 솟구치는 힘을 가함
+        // rb.AddForce(Vector3.up * 1500.0f);
 
-        //간접 폭발력 전달
+        // 간접 폭발력 전달
         IndirectDamage(tr.position);
 
-        //3초 후에 드럼통 제거
+        // 3초 후에 드럼통 제거
         Destroy(gameObject, 3.0f);
-
     }
 
+
     //결괏값을 저장할 정적 배열을 미리 선언
-    Collider[] colls = new Collider[10];
+    //Collider[] colls = new Collider[10];
 
     //폭발력을 주변에 전달하는 함수
     void IndirectDamage(Vector3 pos)
     {
         //주변에 있는 드럼통 모두 추출
         //가비지 컬랙션 발생
-        //Collider[] colls = Physics.OverlapSphere(pos, radius, 1 << 3);
+        Collider[] colls = Physics.OverlapSphere(pos, radius, 1 << 3);
         //가비지 컬랙션 발생하지 않음.
-        Physics.OverlapSphereNonAlloc(pos, radius, colls, 1 << 3);
+        //Physics.OverlapSphereNonAlloc(pos, radius, colls, 1 << 3);
 
         foreach(var coll in colls)
         {

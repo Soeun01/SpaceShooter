@@ -44,7 +44,7 @@ public class FireCtrl : MonoBehaviour
         //총소리 발생
         audio.PlayOneShot(fireSfx, 1.0f);
         //총구 화염 효과 코루틴 함수 호출
-        StartCoroutine(ShowMuzzleFlash());
+        StartCoroutine(ShowMuzzleFlash());        
     }
 
     IEnumerator ShowMuzzleFlash()

@@ -4,9 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Floor
-  - Wall
   - BULLET
+  - PLAYER
+  - PUNCH
   layers:
   - Default
   - TransparentFX
@@ -14,8 +14,8 @@ TagManager:
   - BARREL
   - Water
   - UI
-  - 
-  - 
+  - MONSTER_BODY
+  - MONSTER_PUNCH
   - 
   - 
   - 
