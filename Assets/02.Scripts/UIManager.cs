@@ -1,10 +1,10 @@
 using UnityEngine;
-using UnityEngine.UI;       //Unity-UI¸¦ »ç¿ëÇÏ±â À§ÇØ ¼±¾ðÇÑ ³×ÀÓ½ºÆäÀÌ½º
-using UnityEngine.Events;   //UnityEvent °ü·Ã API¸¦ »ç¿ëÇÏ±â À§ÇØ ¼±¾ðÇÑ ³×ÀÓ½ºÆäÀÌ½º
+using UnityEngine.UI;       //Unity-UIë¥¼ ì‚¬ìš©í•˜ê¸° ìœ„í•´ ì„ ì–¸í•œ ë„¤ìž„ìŠ¤íŽ˜ì´ìŠ¤
+using UnityEngine.Events;   //UnityEvent ê´€ë ¨ APIë¥¼ ì‚¬ìš©í•˜ê¸° ìœ„í•´ ì„ ì–¸í•œ ë„¤ìž„ìŠ¤íŽ˜ì´ìŠ¤
 
 public class UIManager : MonoBehaviour
 {
-    //¹öÆ°À» ¿¬°áÇÒ º¯¼ö
+    //ë²„íŠ¼ì„ ì—°ê²°í•  ë³€ìˆ˜
     public Button startButton;
     public Button optionButton;
     public Button shopButton;
@@ -13,14 +13,14 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        // UnityActionÀ» »ç¿ëÇÑ ÀÌº¥Æ® ¿¬°á ¹æ½Ä
+        // UnityActionì„ ì‚¬ìš©í•œ ì´ë²¤íŠ¸ ì—°ê²° ë°©ì‹
         action = () => OnButtonClick(startButton.name);
         startButton.onClick.AddListener(action);
 
-        // ¹«¸í ¸Þ¼­µå¸¦ È°¿ëÇÑ ÀÌº¥Æ® ¿¬°á ¹æ½Ä
+        // ë¬´ëª… ë©”ì„œë“œë¥¼ í™œìš©í•œ ì´ë²¤íŠ¸ ì—°ê²° ë°©ì‹
         optionButton.onClick.AddListener(delegate { OnButtonClick(optionButton.name); });
 
-        // ¶÷´Ù½ÄÀ» È°¿ëÇÑ ÀÌº¥Æ® ¿¬°á ¹æ½Ä
+        // ëžŒë‹¤ì‹ì„ í™œìš©í•œ ì´ë²¤íŠ¸ ì—°ê²° ë°©ì‹
         shopButton.onClick.AddListener(() => OnButtonClick(shopButton.name));
     }
 
