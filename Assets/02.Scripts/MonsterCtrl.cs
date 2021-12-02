@@ -1,80 +1,103 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//³»ºñ°ÔÀÌ¼Ç ±â´ÉÀ» »ç¿ëÇÏ±â À§ÇØ Ãß°¡ÇØ¾ß ÇÏ´Â ³×ÀÓ½ºÆäÀÌ½º
+//ë‚´ë¹„ê²Œì´ì…˜ ê¸°ëŠ¥ì„ ì‚¬ìš©í•˜ê¸° ìœ„í•´ ì¶”ê°€í•´ì•¼ í•˜ëŠ” ë„¤ì„ìŠ¤í˜ì´ìŠ¤
 using UnityEngine.AI;
 
 public class MonsterCtrl : MonoBehaviour
 {
-    //¸ó½ºÅÍÀÇ »óÅÂ Á¤º¸
+    //ëª¬ìŠ¤í„°ì˜ ìƒíƒœ ì •ë³´
     public enum State { IDLE, PATROL, TRACE, ATTACK, DIE }
 
-    //¸ó½ºÅÍÀÇ ÇöÀç »óÅÂ
+    //ëª¬ìŠ¤í„°ì˜ í˜„ì¬ ìƒíƒœ
     public State state = State.IDLE;
-    //ÃßÀû »çÁ¤°Å¸®
+    //ì¶”ì  ì‚¬ì •ê±°ë¦¬
     public float traceDist = 10.0f;
-    //°ø°İ »çÁ¤°Å¸®
+    //ê³µê²© ì‚¬ì •ê±°ë¦¬
     public float attackDist = 2.0f;
-    //¸ó½ºÅÍ »ç¸Á ¿©ºÎ
+    //ëª¬ìŠ¤í„° ì‚¬ë§ ì—¬ë¶€
     public bool isDie = false;
     
-    //ÄÄÆ÷³ÍÆ®ÀÇ Ä³½Ã¸¦ Ã³¸®ÇÒ º¯¼ö
+    //ì»´í¬ë„ŒíŠ¸ì˜ ìºì‹œë¥¼ ì²˜ë¦¬í•  ë³€ìˆ˜
     private Transform monsterTr;
     private Transform playerTr;
     private NavMeshAgent agent;
     private Animator anim;
 
-    //Animator ÆÄ¶ó¹ÌÅÍÀÇ ÇØ½Ã°ª ÃßÃâ
+    //Animator íŒŒë¼ë¯¸í„°ì˜ í•´ì‹œê°’ ì¶”ì¶œ
     private readonly int hashTrace = Animator.StringToHash("IsTrace");
     private readonly int hashAttack = Animator.StringToHash("IsAttack");
     private readonly int hashHit = Animator.StringToHash("Hit");
+    private readonly int hashPlayerDie = Animator.StringToHash("PlayerDie");
+    private readonly int hashSpeed = Animator.StringToHash("Speed");
+    private readonly int hashDie = Animator.StringToHash("Die");
 
-    //Ç÷Èç È¿°ú ÇÁ¸®Æé
+    //í˜ˆí” íš¨ê³¼ í”„ë¦¬í©
     private GameObject bloodEffect;
+
+    //ëª¬ìŠ¤í„° ìƒëª… ë³€ìˆ˜
+    private int hp = 100;
+
+    //ìŠ¤í¬ë¦½íŠ¸ê°€ í™œì„±í™”ë  ë•Œë§ˆë‹¤ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
+    void OnEnable()
+    {
+        //ì´ë²¤íŠ¸ ë°œìƒ ì‹œ ìˆ˜í–‰í•  í•¨ìˆ˜ ì—°ê²°
+        PlayerCtrl.OnPlayerDie += this.OnPlayerDie;
+    }
+
+    //ìŠ¤í¬ë¦½íŠ¸ê°€ ë¹„í™œì„±í™”ë  ë•Œë§ˆë‹¤ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
+    void OnDisable()
+    {
+        //ê¸°ì¡´ì— ì—°ê²°ëœ í•¨ìˆ˜ í•´ì œ
+        PlayerCtrl.OnPlayerDie -= this.OnPlayerDie;
+    }
 
     void Start()
     {
-        //¸ó½ºÅÍÀÇ Transform ÇÒ´ç
+        //ëª¬ìŠ¤í„°ì˜ Transform í• ë‹¹
         monsterTr = GetComponent<Transform>();
 
-        //ÃßÀû ´ë»óÀÎ PlayerÀÇ Transform ÇÒ´ç
+        //ì¶”ì  ëŒ€ìƒì¸ Playerì˜ Transform í• ë‹¹
         playerTr = GameObject.FindWithTag("PLAYER").GetComponent<Transform>();
 
-        //NavMeshAgent ÄÄÆ÷³ÍÆ® ÇÒ´ç
+        //NavMeshAgent ì»´í¬ë„ŒíŠ¸ í• ë‹¹
         agent = GetComponent<NavMeshAgent>();
 
-        //Animator ÄÄÆ÷³ÍÆ® ÇÒ´ç
+        //Animator ì»´í¬ë„ŒíŠ¸ í• ë‹¹
         anim = GetComponent<Animator>();
 
-        //BloodSprayEffect ÇÁ¸®ÆÕ ·Îµå
+        //BloodSprayEffect í”„ë¦¬íŒ¹ ë¡œë“œ
         bloodEffect = Resources.Load<GameObject>("BloodSprayEffect");
 
-        //ÃßÀû ´ë»óÀÇ À§Ä¡¸¦ ¼³Á¤ÇÏ¸é ¹Ù·Î ÃßÀû ½ÃÀÛ
+        //ì¶”ì  ëŒ€ìƒì˜ ìœ„ì¹˜ë¥¼ ì„¤ì •í•˜ë©´ ë°”ë¡œ ì¶”ì  ì‹œì‘
         //agent.destination = playerTr.position;
 
-        //¸ó½ºÅÍÀÇ »óÅÂ¸¦ Ã¼Å©ÇÏ´Â ÄÚ·çÆ¾ ÇÔ¼ö È£Ãâ
+        //ëª¬ìŠ¤í„°ì˜ ìƒíƒœë¥¼ ì²´í¬í•˜ëŠ” ì½”ë£¨í‹´ í•¨ìˆ˜ í˜¸ì¶œ
         StartCoroutine(CheckMonsterState());
-        //»óÅÂ¿¡ µû¶ó ¸ó½ºÅÍÀÇ Çàµ¿À» ¼öÇàÇÏ´Â ÄÚ·çÆ¾ ÇÔ¼ö È£Ãâ
+        //ìƒíƒœì— ë”°ë¼ ëª¬ìŠ¤í„°ì˜ í–‰ë™ì„ ìˆ˜í–‰í•˜ëŠ” ì½”ë£¨í‹´ í•¨ìˆ˜ í˜¸ì¶œ
         StartCoroutine(MonsterAction());
     }
 
-    //ÀÏÁ¤ÇÑ °£°İÀ¸·Î ¸ó½ºÅÍÀÇ Çàµ¿ »óÅÂ¸¦ Ã¼Å©
+    //ì¼ì •í•œ ê°„ê²©ìœ¼ë¡œ ëª¬ìŠ¤í„°ì˜ í–‰ë™ ìƒíƒœë¥¼ ì²´í¬
     IEnumerator CheckMonsterState()
     {
         while(!isDie)
         {
-            //0.3ÃÊ µ¿¾È ÁßÁö(´ë±â)ÇÏ´Â µ¿¾È Á¦¾î±ÇÀ» ¸Ş½ÃÁö ·çÇÁ¿¡ ¾çº¸
+            //0.3ì´ˆ ë™ì•ˆ ì¤‘ì§€(ëŒ€ê¸°)í•˜ëŠ” ë™ì•ˆ ì œì–´ê¶Œì„ ë©”ì‹œì§€ ë£¨í”„ì— ì–‘ë³´
             yield return new WaitForSeconds(0.3f);
 
-            //¸ó½ºÅÍ¿Í ÁÖÀÎ°ø Ä³¸¯ÅÍ »çÀÌÀÇ °Å¸® ÃøÁ¤
+            //ëª¬ìŠ¤í„°ì˜ ìƒíƒœê°€ DIEì¼ ë•Œ ì½”ë£¨í‹´ì„ ì¢…ë£Œ
+            if(state == State.DIE) yield break;
+
+            //ëª¬ìŠ¤í„°ì™€ ì£¼ì¸ê³µ ìºë¦­í„° ì‚¬ì´ì˜ ê±°ë¦¬ ì¸¡ì •
             float distance = Vector3.Distance(playerTr.position, monsterTr.position);
 
-            //°ø°İ »çÁ¤°Å¸® ¹üÀ§·Î µé¾î¿Ô´ÂÁö È®ÀÎ
+            //ê³µê²© ì‚¬ì •ê±°ë¦¬ ë²”ìœ„ë¡œ ë“¤ì–´ì™”ëŠ”ì§€ í™•ì¸
             if(distance <= attackDist)
             {
                 state = State.ATTACK;
             }
-            //ÃßÀû »çÁ¤°Å¸® ¹üÀ§·Î µé¾î¿Ô´ÂÁö È®ÀÎ
+            //ì¶”ì  ì‚¬ì •ê±°ë¦¬ ë²”ìœ„ë¡œ ë“¤ì–´ì™”ëŠ”ì§€ í™•ì¸
             else if(distance <= traceDist)
             {
                 state = State.TRACE;
@@ -86,43 +109,50 @@ public class MonsterCtrl : MonoBehaviour
         }
     }
 
-    //¸ó½ºÅÍÀÇ »óÅÂ¿¡ µû¶ó ¸ó½ºÅÍÀÇ µ¿ÀÛÀ» ¼öÇà
+    //ëª¬ìŠ¤í„°ì˜ ìƒíƒœì— ë”°ë¼ ëª¬ìŠ¤í„°ì˜ ë™ì‘ì„ ìˆ˜í–‰
     IEnumerator MonsterAction()
     {
         while(!isDie)
         {
             switch(state)
             {
-                //IDLE »óÅÂ
+                //IDLE ìƒíƒœ
                 case State.IDLE:
-                    //ÃßÀû ÁßÁö
+                    //ì¶”ì  ì¤‘ì§€
                     agent.isStopped = true;
-                    //AnimatorÀÇ IsTrace º¯¼ö¸¦ false·Î ¼³Á¤
+                    //Animatorì˜ IsTrace ë³€ìˆ˜ë¥¼ falseë¡œ ì„¤ì •
                     anim.SetBool(hashTrace, false);
                     break;
                 
-                //ÃßÀû »óÅÂ
+                //ì¶”ì  ìƒíƒœ
                 case State.TRACE:
-                    //ÃßÀû ´ë»óÀÇ ÁÂÇ¥·Î ÀÌµ¿ ½ÃÀÛ
+                    //ì¶”ì  ëŒ€ìƒì˜ ì¢Œí‘œë¡œ ì´ë™ ì‹œì‘
                     agent.SetDestination(playerTr.position);
                     agent.isStopped = false;
 
-                    //AnimatorÀÇ IsTrace º¯¼ö¸¦ true·Î ¼³Á¤
+                    //Animatorì˜ IsTrace ë³€ìˆ˜ë¥¼ trueë¡œ ì„¤ì •
                     anim.SetBool(hashTrace, true);
 
-                    //AnimatorÀÇ IsAttack º¯¼ö¸¦ false·Î ¼³Á¤
+                    //Animatorì˜ IsAttack ë³€ìˆ˜ë¥¼ falseë¡œ ì„¤ì •
                     anim.SetBool(hashAttack, false);
                     break;
 
-                //°ø°İ »óÅÂ
+                //ê³µê²© ìƒíƒœ
                 case State.ATTACK:
-                    //AnimatorÀÇ IsAttack º¯¼ö¸¦ true·Î ¼³Á¤
+                    //Animatorì˜ IsAttack ë³€ìˆ˜ë¥¼ trueë¡œ ì„¤ì •
                     anim.SetBool(hashAttack, true);
                     
                     break;
 
-                //»ç¸Á
+                //ì‚¬ë§
                 case State.DIE:
+                    isDie = true;
+                    //ì¶”ì  ì •ì§€
+                    agent.isStopped = true;
+                    //ì‚¬ë§ ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
+                    anim.SetTrigger(hashDie);
+                    //ëª¬ìŠ¤í„°ì˜ Collider ì»´í¬ë„ŒíŠ¸ ë¹„í™œì„±í™”
+                    GetComponent<CapsuleCollider>().enabled = false;
                     break;
             }
             yield return new WaitForSeconds(0.3f);
@@ -133,40 +163,58 @@ public class MonsterCtrl : MonoBehaviour
     {
         if(coll.collider.CompareTag("BULLET"))
         {
-            //Ãæµ¹ÇÑ ÃÑ¾Ë »èÁ¦
+            //ì¶©ëŒí•œ ì´ì•Œ ì‚­ì œ
             Destroy(coll.gameObject);
-            //ÇÇ°İ ¸®¾×¼Ç ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+            //í”¼ê²© ë¦¬ì•¡ì…˜ ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
             anim.SetTrigger(hashHit);
 
-            //ÃÑ¾Ë Ãæµ¹ ÁöÁ¡
+            //ì´ì•Œ ì¶©ëŒ ì§€ì 
             Vector3 pos = coll.GetContact(0).point;
-            //ÃÑ¾Ë Ãæµ¹ ÁöÁ¡ÀÇ ¹ı¼± º¤ÅÍ
+            //ì´ì•Œ ì¶©ëŒ ì§€ì ì˜ ë²•ì„  ë²¡í„°
             Quaternion rot = Quaternion.LookRotation(-coll.GetContact(0).normal);
-            //Ç÷Èç È¿°ú¸¦ »ı¼ºÇÏ´Â ÇÔ¼ö È£Ãâ
+            //í˜ˆí” íš¨ê³¼ë¥¼ ìƒì„±í•˜ëŠ” í•¨ìˆ˜ í˜¸ì¶œ
             ShowBloodEffect(pos, rot);
+
+            //ëª¬ìŠ¤í„°ì˜ hp ì°¨ê°
+            hp -= 10;
+            if(hp <= 0)
+            {
+                state = State.DIE;
+            }
         }
     }
 
     void ShowBloodEffect(Vector3 pos, Quaternion rot)
     {
-        //Ç÷Èç È¿°ú »ı¼º
+        //í˜ˆí” íš¨ê³¼ ìƒì„±
         GameObject blood = Instantiate<GameObject>(bloodEffect, pos, rot, monsterTr);
         Destroy(blood, 1.0f);
     }
 
     void OnDrawGizmos()
     {
-        //ÃßÀû »çÁ¤°Å¸® Ç¥½Ã
+        //ì¶”ì  ì‚¬ì •ê±°ë¦¬ í‘œì‹œ
         if(state == State.TRACE)
         {
             Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(transform.position, traceDist);
         }
-        //°ø°İ »çÁ¤°Å¸® Ç¥½Ã
+        //ê³µê²© ì‚¬ì •ê±°ë¦¬ í‘œì‹œ
         if (state == State.ATTACK)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, attackDist);
         }
+    }
+
+    void OnPlayerDie()
+    {
+        //ëª¬ìŠ¤í„°ì˜ ìƒíƒœë¥¼ ì²´í¬í•˜ëŠ” ì½”ë£¨í‹´ í•¨ìˆ˜ë¥¼ ëª¨ë‘ ì •ì§€ì‹œí‚´
+        StopAllCoroutines();
+
+        //ì¶”ì ì„ ì •ì§€í•˜ê³  ì• ë‹ˆë©”ì´ì…˜ì„ ìˆ˜í–‰
+        agent.isStopped = true;
+        anim.SetFloat(hashSpeed, Random.Range(0.8f, 1.2f));
+        anim.SetTrigger(hashPlayerDie);
     }
 }

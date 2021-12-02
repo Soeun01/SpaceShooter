@@ -2,35 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//¹İµå½Ã ÇÊ¿äÇÑ ÄÄÆ÷³ÍÆ®¸¦ ¸í½ÃÇØ ÇØ´ç ÄÄÆ÷³ÍÆ®°¡ »èÁ¦µÇ´Â °ÍÀ» ¹æÁöÇÏ´Â ¾îÆ®¸®ºäÆ®
+//ë°˜ë“œì‹œ í•„ìš”í•œ ì»´í¬ë„ŒíŠ¸ë¥¼ ëª…ì‹œí•´ í•´ë‹¹ ì»´í¬ë„ŒíŠ¸ê°€ ì‚­ì œë˜ëŠ” ê²ƒì„ ë°©ì§€í•˜ëŠ” ì–´íŠ¸ë¦¬ë·°íŠ¸
 [RequireComponent(typeof(AudioSource))]
 public class FireCtrl : MonoBehaviour
 {
-    //ÃÑ¾Ë ÇÁ¸®ÆÕ
+    //ì´ì•Œ í”„ë¦¬íŒ¹
     public GameObject bullet;
-    //ÃÑ¾Ë ¹ß»ç ÁÂÇ¥
+    //ì´ì•Œ ë°œì‚¬ ì¢Œí‘œ
     public Transform firePos;
-    //ÃÑ¼Ò¸®¿¡ »ç¿ëÇÒ ¿Àµğ¿À À½¿ø
+    //ì´ì†Œë¦¬ì— ì‚¬ìš©í•  ì˜¤ë””ì˜¤ ìŒì›
     public AudioClip fireSfx;
 
-    //AudioSource ÄÄÆ÷³ÍÆ®¸¦ ÀúÀåÇÒ º¯¼ö
+    //AudioSource ì»´í¬ë„ŒíŠ¸ë¥¼ ì €ì¥í•  ë³€ìˆ˜
     private new AudioSource audio;
-    //Muzzle FlashÀÇ MeshRenderer ÄÄÆ÷³ÍÆ®
+    //Muzzle Flashì˜ MeshRenderer ì»´í¬ë„ŒíŠ¸
     private MeshRenderer muzzleFlash;
 
     void Start()
     {
         audio = GetComponent<AudioSource>();
 
-        //FirePos ÇÏÀ§¿¡ ÀÖ´Â MuzzleFlashÀÇ Material ÄÄÆ÷³ÍÆ®¸¦ ÃßÃâ
+        //FirePos í•˜ìœ„ì— ìˆëŠ” MuzzleFlashì˜ Material ì»´í¬ë„ŒíŠ¸ë¥¼ ì¶”ì¶œ
         muzzleFlash = firePos.GetComponentInChildren<MeshRenderer>();
-        //Ã³À½ ½ÃÀÛÇÒ ¶§ ºñÈ°¼ºÈ­
+        //ì²˜ìŒ ì‹œì‘í•  ë•Œ ë¹„í™œì„±í™”
         muzzleFlash.enabled = false;
     }
 
     void Update()
     {
-        //¸¶¿ì½º ¿ŞÂÊ ¹öÆ°À» Å¬¸¯ÇßÀ» ¶§ Fire ÇÔ¼ö È£Ãâ
+        //ë§ˆìš°ìŠ¤ ì™¼ìª½ ë²„íŠ¼ì„ í´ë¦­í–ˆì„ ë•Œ Fire í•¨ìˆ˜ í˜¸ì¶œ
         if(Input.GetMouseButtonDown(0))
         {
             Fire();
@@ -39,38 +39,38 @@ public class FireCtrl : MonoBehaviour
 
     void Fire()
     {
-        //Bullet ÇÁ¸®ÆÕÀ» µ¿ÀûÀ¸·Î »ı¼º(»ı¼ºÇÒ °´Ã¼, À§Ä¡, È¸Àü)
+        //Bullet í”„ë¦¬íŒ¹ì„ ë™ì ìœ¼ë¡œ ìƒì„±(ìƒì„±í•  ê°ì²´, ìœ„ì¹˜, íšŒì „)
         Instantiate(bullet, firePos.position, firePos.rotation);
-        //ÃÑ¼Ò¸® ¹ß»ı
+        //ì´ì†Œë¦¬ ë°œìƒ
         audio.PlayOneShot(fireSfx, 1.0f);
-        //ÃÑ±¸ È­¿° È¿°ú ÄÚ·çÆ¾ ÇÔ¼ö È£Ãâ
+        //ì´êµ¬ í™”ì—¼ íš¨ê³¼ ì½”ë£¨í‹´ í•¨ìˆ˜ í˜¸ì¶œ
         StartCoroutine(ShowMuzzleFlash());        
     }
 
     IEnumerator ShowMuzzleFlash()
     {
-        //¿ÀÇÁ¼Â ÁÂÇ©°ªÀ» ·£´ı ÇÔ¼ö·Î »ı¼º
+        //ì˜¤í”„ì…‹ ì¢Œí‘¯ê°’ì„ ëœë¤ í•¨ìˆ˜ë¡œ ìƒì„±
         Vector2 offset = new Vector2(Random.Range(0, 2), Random.Range(0, 2)) * 0.5f;
-        //ÅØ½ºÃ³ÀÇ ¿ÀÇÁ¼Â °ª ¼³Á¤
+        //í…ìŠ¤ì²˜ì˜ ì˜¤í”„ì…‹ ê°’ ì„¤ì •
         muzzleFlash.material.mainTextureOffset = offset;
         //muzzleFlash.material.SetTextureOffset("_MainTxt", offset);
 
-        //MuzzleFlashÀÇ È¸Àü º¯°æ
+        //MuzzleFlashì˜ íšŒì „ ë³€ê²½
         float angle = Random.Range(0, 360);
         muzzleFlash.transform.localRotation = Quaternion.Euler(0, 0, angle);
 
-        //MuzzleFlashÀÇ Å©±â Á¶Àı
+        //MuzzleFlashì˜ í¬ê¸° ì¡°ì ˆ
         //float scale = Random.Range(1.0f, 2.0f);       <-- ???
         float scale = Random.Range(-0.1f, 0.1f);
         muzzleFlash.transform.localPosition = Vector3.one * scale;
 
-        //MuzzleFlash È°¼ºÈ­
+        //MuzzleFlash í™œì„±í™”
         muzzleFlash.enabled = true;
 
-        //0.2ÃÊ µ¿¾È ´ë±â(Á¤Áö)ÇÏ´Â µ¿¾È ¸Ş½ÃÁö ·çÇÁ·Î Á¦¾î±ÇÀ» ¾çº¸
+        //0.2ì´ˆ ë™ì•ˆ ëŒ€ê¸°(ì •ì§€)í•˜ëŠ” ë™ì•ˆ ë©”ì‹œì§€ ë£¨í”„ë¡œ ì œì–´ê¶Œì„ ì–‘ë³´
         yield return new WaitForSeconds(0.2f);
 
-        //MuzzleFlash ºñÈ°¼ºÈ­
+        //MuzzleFlash ë¹„í™œì„±í™”
         muzzleFlash.enabled = false;
     }
 }

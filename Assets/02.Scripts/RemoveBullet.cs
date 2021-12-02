@@ -4,26 +4,26 @@ using UnityEngine;
 
 public class RemoveBullet : MonoBehaviour
 {
-    //½ºÆÄÅ© ÆÄÆ¼Å¬ ÇÁ¸®ÆÕÀ» ¿¬°áÇÒ º¯¼ö
+    //ìŠ¤íŒŒí¬ íŒŒí‹°í´ í”„ë¦¬íŒ¹ì„ ì—°ê²°í•  ë³€ìˆ˜
     public GameObject sparkEffect;
 
-    //Ãæµ¹ÀÌ ½ÃÀÛÇÒ ¶§ ¹ß»ýÇÏ´Â ÀÌº¥Æ®
+    //ì¶©ëŒì´ ì‹œìž‘í•  ë•Œ ë°œìƒí•˜ëŠ” ì´ë²¤íŠ¸
     void OnCollisionEnter(Collision coll)
     {
-        //Ãæµ¹ÇÑ °ÔÀÓ¿ÀºêÁ§Æ®ÀÇ ÅÂ±×°ª ºñ±³
+        //ì¶©ëŒí•œ ê²Œìž„ì˜¤ë¸Œì íŠ¸ì˜ íƒœê·¸ê°’ ë¹„êµ
         if(coll.collider.CompareTag("BULLET"))
         {
-            //Ã¹ ¹øÂ° Ãæµ¹ ÁöÁ¡ÀÇ Á¤º¸ ÃßÃâ
+            //ì²« ë²ˆì§¸ ì¶©ëŒ ì§€ì ì˜ ì •ë³´ ì¶”ì¶œ
             ContactPoint cp = coll.GetContact(0);
-            //Ãæµ¹ÇÑ ÃÑ¾ËÀÇ ¹ý¼± º¤ÅÍ¸¦ ÄõÅÍ´Ï¾ð Å¸ÀÔÀ¸·Î º¯È¯
+            //ì¶©ëŒí•œ ì´ì•Œì˜ ë²•ì„  ë²¡í„°ë¥¼ ì¿¼í„°ë‹ˆì–¸ íƒ€ìž…ìœ¼ë¡œ ë³€í™˜
             Quaternion rot = Quaternion.LookRotation(-cp.normal);
 
-            //½ºÆÄÅ© ÆÄÆ¼Å¬À» µ¿ÀûÀ¸·Î »ý¼º
+            //ìŠ¤íŒŒí¬ íŒŒí‹°í´ì„ ë™ì ìœ¼ë¡œ ìƒì„±
             GameObject spark = Instantiate(sparkEffect, cp.point, rot);
-            //ÀÏÁ¤ ½Ã°£ÀÌ Áö³­ ÈÄ ½ºÆÄÅ© ÆÄÆ¼Å¬À» »èÁ¦
+            //ì¼ì • ì‹œê°„ì´ ì§€ë‚œ í›„ ìŠ¤íŒŒí¬ íŒŒí‹°í´ì„ ì‚­ì œ
             Destroy(spark, 0.5f);
 
-            //Ãæµ¹ÇÑ °ÔÀÓ¿ÀºêÁ§Æ® »èÁ¦
+            //ì¶©ëŒí•œ ê²Œìž„ì˜¤ë¸Œì íŠ¸ ì‚­ì œ
             Destroy(coll.gameObject);
         }
     }

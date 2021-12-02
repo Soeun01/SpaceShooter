@@ -4,34 +4,38 @@ using UnityEngine;
 
 public class PlayerCtrl : MonoBehaviour
 {
-    //ÄÄÆ÷³ÍÆ®¸¦ Ä³½Ã Ã³¸®ÇÒ º¯¼ö
-    //SerializeField : ÀÎ½ºÆåÅÍ ºä¿¡ ³ëÃâÇÏ´Â ±â´É
+    //ì»´í¬ë„ŒíŠ¸ë¥¼ ìºì‹œ ì²˜ë¦¬í•  ë³€ìˆ˜
+    //SerializeField : ì¸ìŠ¤í™í„° ë·°ì— ë…¸ì¶œí•˜ëŠ” ê¸°ëŠ¥
     //[SerializeField]
     private Transform tr;
-    //Animation ÄÄÆ÷³ÍÆ®¸£ ÀúÀåÇÒ º¯¼ö
+    //Animation ì»´í¬ë„ŒíŠ¸ë¥´ ì €ì¥í•  ë³€ìˆ˜
     private Animation anim;
 
-
-    //ÀÌµ¿ ¼Óµµ º¯¼ö(publicÀ¸·Î ¼±¾ğµÇ¾î ÀÎ½ºÆåÅÍ ºä¿¡ ³ëÃâµÊ)
+    //ì´ë™ ì†ë„ ë³€ìˆ˜(publicìœ¼ë¡œ ì„ ì–¸ë˜ì–´ ì¸ìŠ¤í™í„° ë·°ì— ë…¸ì¶œë¨)
     public float moveSpeed = 10.0f;
-    //È¸Àü ¼Óµµ º¯¼ö
+    //íšŒì „ ì†ë„ ë³€ìˆ˜
     public float turnSpeed = 80.0f;
     
-    //ÃÊ±â »ı¸í °ª
+    //ì´ˆê¸° ìƒëª… ê°’
     private readonly float initHp = 100.0f;
-    //ÇöÀç »ı¸í °ª
+    //í˜„ì¬ ìƒëª… ê°’
     private float currHp;
+
+    //ë¸ë¦¬ê²Œì´íŠ¸ ì„ ì–¸
+    public delegate void PlayerDieHandler();
+    //ì´ë²¤íŠ¸ ì„ ì–¸
+    public static event PlayerDieHandler OnPlayerDie;
 
     IEnumerator Start()
     {
-        //HP ÃÊ±âÈ­
+        //HP ì´ˆê¸°í™”
         currHp = initHp;
         
-        //ÄÄÆ÷³ÍÆ®¸¦ ÃßÃâÇØ º¯¼ö¿¡ ´ëÀÔ
+        //ì»´í¬ë„ŒíŠ¸ë¥¼ ì¶”ì¶œí•´ ë³€ìˆ˜ì— ëŒ€ì…
         tr = GetComponent<Transform>();
         anim = GetComponent<Animation>();
 
-        //¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        //ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         anim.Play("Idle");
 
         turnSpeed = 0.0f;
@@ -43,70 +47,70 @@ public class PlayerCtrl : MonoBehaviour
     {
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
-        float r = Input.GetAxis("Mouse X");     //¸¶¿ì½º ÁÂ¿ì ¿òÁ÷ÀÓ
+        float r = Input.GetAxis("Mouse X");     //ë§ˆìš°ìŠ¤ ì¢Œìš° ì›€ì§ì„
 
         /*
         Debug.Log("h = " + h);
         Debug.Log("v = " + v);
 
-        //Transform ÄÄÆ÷³ÍÆ®ÀÇ position ¼Ó¼º°ªÀ» ¹İÈ¯
+        //Transform ì»´í¬ë„ŒíŠ¸ì˜ position ì†ì„±ê°’ì„ ë°˜í™˜
         transform.position += new Vector3(0, 0, 1);
 
-        //Á¤±ÔÈ­ º¤ÅÍ¸¦ »ç¿ëÇÑ ÄÚµå
+        //ì •ê·œí™” ë²¡í„°ë¥¼ ì‚¬ìš©í•œ ì½”ë“œ
         tr.position += Vector3.forward * 1;
 
-        //Translate ÇÔ¼ö¸¦ »ç¿ëÇÑ ÀÌµ¿ ·ÎÁ÷
+        //Translate í•¨ìˆ˜ë¥¼ ì‚¬ìš©í•œ ì´ë™ ë¡œì§
         tr.Translate(Vector3.forward * Time.deltaTime * v * moveSpeed);
         */
         
-        //ÀüÈÄÁÂ¿ì ÀÌµ¿ ¹æÇâ º¤ÅÍ °è»ê
+        //ì „í›„ì¢Œìš° ì´ë™ ë°©í–¥ ë²¡í„° ê³„ì‚°
         Vector3 moveDir = (Vector3.forward * v) + (Vector3.right * h);
 
-        //Translate(ÀÌµ¿¹æÇâ * ¼Ó·Â * Time.deltaTime)
+        //Translate(ì´ë™ë°©í–¥ * ì†ë ¥ * Time.deltaTime)
         tr.Translate(moveDir.normalized * moveSpeed * Time.deltaTime);
 
-        //Vector3.up ÃàÀ» ±âÁØÀ¸·Î turnSpeed¸¸Å­ÀÇ ¼Óµµ·Î È¸Àü
+        //Vector3.up ì¶•ì„ ê¸°ì¤€ìœ¼ë¡œ turnSpeedë§Œí¼ì˜ ì†ë„ë¡œ íšŒì „
         tr.Rotate(Vector3.up * turnSpeed * Time.deltaTime * r);
 
-        //ÁÖÀÎ°ø Ä³¸¯ÅÍÀÇ ¾Ö´Ï¸ŞÀÌ¼Ç ¼³Á¤
+        //ì£¼ì¸ê³µ ìºë¦­í„°ì˜ ì• ë‹ˆë©”ì´ì…˜ ì„¤ì •
         PlayerAnim(h, v);
     }
 
     void PlayerAnim(float h, float v)
     {
-        //Å°º¸µå ÀÔ·Â°ªÀ» ±âÁØÀ¸·Î µ¿ÀÛÇÒ ¾Ö´Ï¸ŞÀÌ¼Ç ¼öÇà
+        //í‚¤ë³´ë“œ ì…ë ¥ê°’ì„ ê¸°ì¤€ìœ¼ë¡œ ë™ì‘í•  ì• ë‹ˆë©”ì´ì…˜ ìˆ˜í–‰
         if(v >= 0.1f)
         {
-            anim.CrossFade("RunF", 0.25f);  //ÀüÁø ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+            anim.CrossFade("RunF", 0.25f);  //ì „ì§„ ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         }
         else if(v <= -0.1f)
         {
-            anim.CrossFade("RunB", 0.25f);  //ÈÄÁø ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+            anim.CrossFade("RunB", 0.25f);  //í›„ì§„ ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         }
         else if(h >= 0.1f)
         {
-            anim.CrossFade("RunR", 0.25f);  //¿À¸¥ÂÊ ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+            anim.CrossFade("RunR", 0.25f);  //ì˜¤ë¥¸ìª½ ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         }
         else if(h <= -0.1f)
         {
-            anim.CrossFade("RunL", 0.25f);  //¿ŞÂÊ ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+            anim.CrossFade("RunL", 0.25f);  //ì™¼ìª½ ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         }
         else
         {
-            anim.CrossFade("Idle", 0.25f);  //Á¤Áö ½Ã Idle ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+            anim.CrossFade("Idle", 0.25f);  //ì •ì§€ ì‹œ Idle ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         }
     }
 
-    //Ãæµ¹ÇÑ ColliderÀÇ IsTrigger ¿É¼ÇÀÌ Ã¼Å©µÆÀ» ¶§ ¹ß»ı
+    //ì¶©ëŒí•œ Colliderì˜ IsTrigger ì˜µì…˜ì´ ì²´í¬ëì„ ë•Œ ë°œìƒ
     void OnTriggerEnter(Collider coll)
     {
-        //Ãæµ¹ÇÑ Collider°¡ ¸ó½ºÅÍÀÇ PUNCHÀÌ¸é PlayerÀÇ HP Â÷°¨
+        //ì¶©ëŒí•œ Colliderê°€ ëª¬ìŠ¤í„°ì˜ PUNCHì´ë©´ Playerì˜ HP ì°¨ê°
         if(currHp >= 0.0f && coll.CompareTag("PUNCH"))
         {
             currHp -= 10.0f;
             Debug.Log($"Player hp = {currHp/initHp}");
             
-            //PlayerÀÇ »ı¸íÀÌ 0 ÀÌÇÏÀÌ¸é »ç¸Á Ã³¸®
+            //Playerì˜ ìƒëª…ì´ 0 ì´í•˜ì´ë©´ ì‚¬ë§ ì²˜ë¦¬
             if(currHp <= 0.0f)
             {
                 PlayerDie();
@@ -114,9 +118,23 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
 
-    //PlayerÀÇ »ç¸Á Ã³¸®
+    //Playerì˜ ì‚¬ë§ ì²˜ë¦¬
     void PlayerDie()
     {
         Debug.Log("Player Die!");
+
+        /*
+        //MONSTER íƒœê·¸ë¥¼ ê°€ì§„ ëª¨ë“  ê²Œì„ì˜¤ë¸Œì íŠ¸ë¥¼ ì°¾ì•„ì˜´
+        GameObject[] monsters = GameObject.FindGameObjectsWithTag("MONSTER");
+
+        //ëª¨ë“  ëª¬ìŠ¤í„° OnPlayerDie í•¨ìˆ˜ë¥¼ ìˆœì°¨ì ìœ¼ë¡œ í˜¸ì¶œ
+        foreach(GameObject monster in monsters)
+        {
+            monster.SendMessage("OnPlayerDie", SendMessageOptions.DontRequireReceiver);
+        }
+        */
+
+        //ì£¼ì¸ê³µ ì‚¬ë§ ì´ë²¤íŠ¸ í˜¸ì¶œ(ë°œìƒ)
+        OnPlayerDie();
     }
 }

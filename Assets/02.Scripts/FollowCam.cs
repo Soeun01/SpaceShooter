@@ -4,56 +4,56 @@ using UnityEngine;
 
 public class FollowCam : MonoBehaviour
 {
-    //µû¶ó°¡¾ß ÇÒ ´ë»óÀ» ¿¬°áÇÒ º¯¼ö
+    //ë”°ë¼ê°€ì•¼ í•  ëŒ€ìƒì„ ì—°ê²°í•  ë³€ìˆ˜
     public Transform targetTr;
-    //Main Camera ÀÚ½ÅÀÇ Transform ÄÄÆ÷³ÍÆ®
+    //Main Camera ìì‹ ì˜ Transform ì»´í¬ë„ŒíŠ¸
     private Transform camTr;
 
-    //[Range(min, max)] : ¾îÆ®¸®ºäÆ®, ´ÙÀ½ ¶óÀÎ¿¡ ¼±¾ğÇÑ º¯¼öÀÇ ÀÔ·Â ¹üÀ§¸¦ Á¦ÇÑ.
-    //µû¶ó°¥ ´ë»óÀ¸·ÎºÎÅÍ ¶³¾îÁú °Å¸®
+    //[Range(min, max)] : ì–´íŠ¸ë¦¬ë·°íŠ¸, ë‹¤ìŒ ë¼ì¸ì— ì„ ì–¸í•œ ë³€ìˆ˜ì˜ ì…ë ¥ ë²”ìœ„ë¥¼ ì œí•œ.
+    //ë”°ë¼ê°ˆ ëŒ€ìƒìœ¼ë¡œë¶€í„° ë–¨ì–´ì§ˆ ê±°ë¦¬
     [Range(2.0f, 20.0f)]
     public float distance = 10.0f;
 
-    //yÃàÀ¸·Î ÀÌµ¿ÇÒ ³ôÀÌ
+    //yì¶•ìœ¼ë¡œ ì´ë™í•  ë†’ì´
     [Range(0.0f, 10.0f)]
     public float height = 2.0f;
 
-    //¹İÀÀ ¼Óµµ
+    //ë°˜ì‘ ì†ë„
     public float damping = 10.0f;
-    //Ä«¸Ş¶ó LookAtÀÇ Offset °ª
+    //ì¹´ë©”ë¼ LookAtì˜ Offset ê°’
     public float targetOffset = 2.0f;
 
-    //SmoothDamp¿¡¼­ »ç¿ëÇÒ º¯¼ö
+    //SmoothDampì—ì„œ ì‚¬ìš©í•  ë³€ìˆ˜
     private Vector3 velocity = Vector3.zero;
 
     void Start()
     {
-        //Main Camera ÀÚ½ÅÀÇ Transform ÄÄÆ÷³ÍÆ®¸¦ ÃßÃâ
+        //Main Camera ìì‹ ì˜ Transform ì»´í¬ë„ŒíŠ¸ë¥¼ ì¶”ì¶œ
         camTr = GetComponent<Transform>();
     }
 
     void LateUpdate()
     {
-        //ÃßÀûÇØ¾ß ÇÒ ´ë»óÀÇ µÚÂÊÀ¸·Î distance¸¸Å­ ÀÌµ¿
-        //³ôÀÌ¸¦ height¸¸Å­ ÀÌµ¿
+        //ì¶”ì í•´ì•¼ í•  ëŒ€ìƒì˜ ë’¤ìª½ìœ¼ë¡œ distanceë§Œí¼ ì´ë™
+        //ë†’ì´ë¥¼ heightë§Œí¼ ì´ë™
         Vector3 pos = targetTr.position 
                         + (-targetTr.forward * distance)
                         + (Vector3.up * height);
 
         /*
-        //±¸¸é ¼±Çü º¸°£ ÇÔ¼ö¸¦ »ç¿ëÇØ ºÎµå·´°Ô À§Ä¡¸¦ º¯°æ
-        camTr.position = Vector3.Slerp(camTr.position,      //½ÃÀÛ À§Ä¡
-                                pos,                        //¸ñÇ¥ À§Ä¡
-                                Time.deltaTime * damping);  //½Ã°£ t
+        //êµ¬ë©´ ì„ í˜• ë³´ê°„ í•¨ìˆ˜ë¥¼ ì‚¬ìš©í•´ ë¶€ë“œëŸ½ê²Œ ìœ„ì¹˜ë¥¼ ë³€ê²½
+        camTr.position = Vector3.Slerp(camTr.position,      //ì‹œì‘ ìœ„ì¹˜
+                                pos,                        //ëª©í‘œ ìœ„ì¹˜
+                                Time.deltaTime * damping);  //ì‹œê°„ t
         */
 
-        //SmoothDampÀ» ÀÌ¿ëÇÑ À§Ä¡ º¸°£
-        camTr.position = Vector3.SmoothDamp(camTr.position, //½ÃÀÛ À§Ä¡
-                                            pos,            //¸ñÇ¥ À§Ä¡
-                                            ref velocity,   //ÇöÀç ¼Óµµ
-                                            damping);       //¸ñÇ¥ À§Ä¡±îÁö µµ´ŞÇÒ ½Ã°£
+        //SmoothDampì„ ì´ìš©í•œ ìœ„ì¹˜ ë³´ê°„
+        camTr.position = Vector3.SmoothDamp(camTr.position, //ì‹œì‘ ìœ„ì¹˜
+                                            pos,            //ëª©í‘œ ìœ„ì¹˜
+                                            ref velocity,   //í˜„ì¬ ì†ë„
+                                            damping);       //ëª©í‘œ ìœ„ì¹˜ê¹Œì§€ ë„ë‹¬í•  ì‹œê°„
 
-        //Camera¸¦ ÇÇ¹ş ÁÂÇ¥¸¦ ÇâÇØ È¸Àü
+        //Cameraë¥¼ í”¼ë²— ì¢Œí‘œë¥¼ í–¥í•´ íšŒì „
         camTr.LookAt(targetTr.position + (targetTr.up * targetOffset));
     }
 }

@@ -1,22 +1,22 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BulletCtrl : MonoBehaviour
 {
-    //ÃÑ¾ËÀÇ ÆÄ±«·Â
+    //ì´ì•Œì˜ íŒŒê´´ë ¥
     public float damage = 20.0f;
-    //ÃÑ¾Ë ¹ß»ç Èû
+    //ì´ì•Œ ë°œì‚¬ í˜
     public float force = 1500.0f;
 
     private Rigidbody rb;
 
     void Start()
     {
-        //Rigidbody ÄÄÆ÷³ÍÆ®¸¦ ÃßÃâ
+        //Rigidbody ì»´í¬ë„ŒíŠ¸ë¥¼ ì¶”ì¶œ
         rb = GetComponent<Rigidbody>();
 
-        //ÃÑ¾ËÀÇ ÀüÁø ¹æÇâÀ¸·Î Èû(Force)À» °¡ÇÑ´Ù.
+        //ì´ì•Œì˜ ì „ì§„ ë°©í–¥ìœ¼ë¡œ í˜(Force)ì„ ê°€í•œë‹¤.
         rb.AddForce(transform.forward * force);
     }
 }

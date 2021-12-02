@@ -4,23 +4,23 @@ using UnityEngine;
 
 public class BarrelCtrl : MonoBehaviour
 {
-    //Æø¹ß È¿°ú ÆÄÆ¼Å¬À» ¿¬°áÇÒ º¯¼ö
+    //í­ë°œ íš¨ê³¼ íŒŒí‹°í´ì„ ì—°ê²°í•  ë³€ìˆ˜
     public GameObject expEffect;
 
-    //¹«ÀÛÀ§·Î Àû¿ëÇÒ ÅØ½ºÃ³ ¹è¿­
+    //ë¬´ì‘ìœ„ë¡œ ì ìš©í•  í…ìŠ¤ì²˜ ë°°ì—´
     public Texture[] textures;
 
-    //Æø¹ß ¹İ°æ
+    //í­ë°œ ë°˜ê²½
     public float radius = 10.0f;
 
-    //ÇÏÀ§¿¡ ÀÖ´Â Mesh Renderer ÄÄÆ÷³ÍÆ®¸¦ ÁöÁ¤ÇÒ º¯¼ö
-    private new MeshRenderer renderer;  //MeshRendererÀº ²À new keyword¸¦ »ç¿ëÇØ¾ß ÇÑ´Ù. 
+    //í•˜ìœ„ì— ìˆëŠ” Mesh Renderer ì»´í¬ë„ŒíŠ¸ë¥¼ ì§€ì •í•  ë³€ìˆ˜
+    private new MeshRenderer renderer;  //MeshRendererì€ ê¼­ new keywordë¥¼ ì‚¬ìš©í•´ì•¼ í•œë‹¤. 
 
-    //ÄÄÆ÷³ÍÆ®¸¦ ÀúÀåÇÒ º¯¼ö
+    //ì»´í¬ë„ŒíŠ¸ë¥¼ ì €ì¥í•  ë³€ìˆ˜
     private Transform tr;
     private Rigidbody rb;
 
-    //ÃÑ¾Ë ¸ÂÀº È½¼ö¸¦ ´©Àû½ÃÅ³ º¯¼ö
+    //ì´ì•Œ ë§ì€ íšŸìˆ˜ë¥¼ ëˆ„ì ì‹œí‚¬ ë³€ìˆ˜
     private int hitCount = 0;
 
     private void Start()
@@ -28,21 +28,21 @@ public class BarrelCtrl : MonoBehaviour
         tr = GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
 
-        //ÇÏÀ§¿¡ ÀÖ´Â MeshRenderer ÄÄÆ÷³ÍÆ® ÃßÃâ
+        //í•˜ìœ„ì— ìˆëŠ” MeshRenderer ì»´í¬ë„ŒíŠ¸ ì¶”ì¶œ
         renderer = GetComponentInChildren<MeshRenderer>();
 
-        //³­¼ö ¹ß»ı
+        //ë‚œìˆ˜ ë°œìƒ
         int idx = Random.Range(0, textures.Length);
-        //ÅØ½ºÃ³ ÁöÁ¤
+        //í…ìŠ¤ì²˜ ì§€ì •
         renderer.material.mainTexture = textures[idx];
     }
 
-    //Ãæµ¹ ½Ã ¹ß»ıÇÏ´Â Äİ¹é ÇÔ¼ö
+    //ì¶©ëŒ ì‹œ ë°œìƒí•˜ëŠ” ì½œë°± í•¨ìˆ˜
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.collider.CompareTag("BULLET"))
         {
-            //ÃÑ¾Ë ¸ÂÀº È½¼ö¸¦ Áõ°¡½ÃÅ°°í 3È¸ ÀÌ»óÀÌ¸é Æø¹ßÃ³¸®
+            //ì´ì•Œ ë§ì€ íšŸìˆ˜ë¥¼ ì¦ê°€ì‹œí‚¤ê³  3íšŒ ì´ìƒì´ë©´ í­ë°œì²˜ë¦¬
             if(++hitCount == 3)
             {
                 ExpBarrel();
@@ -50,51 +50,51 @@ public class BarrelCtrl : MonoBehaviour
         }
     }
     
-    // µå·³ÅëÀ» Æø¹ß½ÃÅ³ ÇÔ¼ö
+    // ë“œëŸ¼í†µì„ í­ë°œì‹œí‚¬ í•¨ìˆ˜
     void ExpBarrel()
     {
-        // Æø¹ß È¿°ú ÆÄÆ¼Å¬ »ı¼º
+        // í­ë°œ íš¨ê³¼ íŒŒí‹°í´ ìƒì„±
         GameObject exp = Instantiate(expEffect, tr.position, Quaternion.identity);
-        // Æø¹ß È¿°ú ÆÄÆ¼Å¬ 5ÃÊ ÈÄ¿¡ Á¦°Å
+        // í­ë°œ íš¨ê³¼ íŒŒí‹°í´ 5ì´ˆ í›„ì— ì œê±°
         Destroy(exp, 5.0f);
 
-        // Rigidbody ÄÄÆ÷³ÍÆ®ÀÇ mass¸¦ 1.0À¸·Î ¼öÁ¤ÇØ ¹«°Ô¸¦ °¡º±°Ô ÇÔ
+        // Rigidbody ì»´í¬ë„ŒíŠ¸ì˜ massë¥¼ 1.0ìœ¼ë¡œ ìˆ˜ì •í•´ ë¬´ê²Œë¥¼ ê°€ë³ê²Œ í•¨
         // rb.mass = 1.0f;
-        // À§·Î ¼Ú±¸Ä¡´Â ÈûÀ» °¡ÇÔ
+        // ìœ„ë¡œ ì†Ÿêµ¬ì¹˜ëŠ” í˜ì„ ê°€í•¨
         // rb.AddForce(Vector3.up * 1500.0f);
 
-        // °£Á¢ Æø¹ß·Â Àü´Ş
+        // ê°„ì ‘ í­ë°œë ¥ ì „ë‹¬
         IndirectDamage(tr.position);
 
-        // 3ÃÊ ÈÄ¿¡ µå·³Åë Á¦°Å
+        // 3ì´ˆ í›„ì— ë“œëŸ¼í†µ ì œê±°
         Destroy(gameObject, 3.0f);
     }
 
 
-    //°á±£°ªÀ» ÀúÀåÇÒ Á¤Àû ¹è¿­À» ¹Ì¸® ¼±¾ğ
+    //ê²°ê´ê°’ì„ ì €ì¥í•  ì •ì  ë°°ì—´ì„ ë¯¸ë¦¬ ì„ ì–¸
     //Collider[] colls = new Collider[10];
 
-    //Æø¹ß·ÂÀ» ÁÖº¯¿¡ Àü´ŞÇÏ´Â ÇÔ¼ö
+    //í­ë°œë ¥ì„ ì£¼ë³€ì— ì „ë‹¬í•˜ëŠ” í•¨ìˆ˜
     void IndirectDamage(Vector3 pos)
     {
-        //ÁÖº¯¿¡ ÀÖ´Â µå·³Åë ¸ğµÎ ÃßÃâ
-        //°¡ºñÁö ÄÃ·¢¼Ç ¹ß»ı
+        //ì£¼ë³€ì— ìˆëŠ” ë“œëŸ¼í†µ ëª¨ë‘ ì¶”ì¶œ
+        //ê°€ë¹„ì§€ ì»¬ë™ì…˜ ë°œìƒ
         Collider[] colls = Physics.OverlapSphere(pos, radius, 1 << 3);
-        //°¡ºñÁö ÄÃ·¢¼Ç ¹ß»ıÇÏÁö ¾ÊÀ½.
+        //ê°€ë¹„ì§€ ì»¬ë™ì…˜ ë°œìƒí•˜ì§€ ì•ŠìŒ.
         //Physics.OverlapSphereNonAlloc(pos, radius, colls, 1 << 3);
 
         foreach(var coll in colls)
         {
-            //Æø¹ß ¹üÀ§¿¡ Æ÷ÇÔµÈ µå·³ÅëÀÇ Rigidbody ÄÄÆ÷³ÍÆ® ÃßÃâ
+            //í­ë°œ ë²”ìœ„ì— í¬í•¨ëœ ë“œëŸ¼í†µì˜ Rigidbody ì»´í¬ë„ŒíŠ¸ ì¶”ì¶œ
             rb = coll.GetComponent<Rigidbody>();
 
-            //µå·³ÅëÀÇ ¹«°Ô¸¦ °¡º±°Ô ÇÔ
+            //ë“œëŸ¼í†µì˜ ë¬´ê²Œë¥¼ ê°€ë³ê²Œ í•¨
             rb.mass = 1.0f;
 
-            //freezeRoatation Á¦ÇÑ°ªÀ» ÇØÁ¦
+            //freezeRoatation ì œí•œê°’ì„ í•´ì œ
             rb.constraints = RigidbodyConstraints.None;
 
-            //Æø¹ß·ÂÀ» Àü´Ş
+            //í­ë°œë ¥ì„ ì „ë‹¬
             rb.AddExplosionForce(1500.0f, pos, radius, 1200.0f);
         }
     }

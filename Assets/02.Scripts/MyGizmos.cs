@@ -9,10 +9,10 @@ public class MyGizmos : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        //±âÁî¸ð »ö»ó ¼³Á¤
+        //ê¸°ì¦ˆëª¨ ìƒ‰ìƒ ì„¤ì •
         Gizmos.color = _color;
 
-        //±¸Ã¼ ¸ð¾çÀÇ ±âÁî¸ð »ý¼º. ÀÎÀÚ´Â (»ý¼º À§Ä¡, ¹ÝÁö¸§)
+        //êµ¬ì²´ ëª¨ì–‘ì˜ ê¸°ì¦ˆëª¨ ìƒì„±. ì¸ìžëŠ” (ìƒì„± ìœ„ì¹˜, ë°˜ì§€ë¦„)
         Gizmos.DrawSphere(transform.position, _radius);
     }
 }
