@@ -32,7 +32,7 @@ public class UIManager : MonoBehaviour
 
     public void OnStartClick()
     {
-        SceneManager.LoadScene("Level_01");
-        SceneManager.LoadScene("Play", LoadSceneMode.Additive);
+        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(1, LoadSceneMode.Additive);
     }
 }
